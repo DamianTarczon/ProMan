@@ -16,6 +16,16 @@ def index():
     return render_template('index.html')
 
 
+@app.route("/registration")
+def registration():
+    return render_template('registration.html')
+
+
+@app.route("/login")
+def login():
+    return render_template('login.html')
+
+
 @app.route("/api/boards")
 @json_response
 def get_boards():
