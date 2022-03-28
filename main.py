@@ -8,12 +8,23 @@ mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
 load_dotenv()
 
+
 @app.route("/")
 def index():
     """
     This is a one-pager which shows all the boards and cards
     """
     return render_template('index.html')
+
+
+@app.route("/registration")
+def registration():
+    return render_template('registration.html')
+
+
+@app.route("/login")
+def login():
+    return render_template('login.html')
 
 
 @app.route("/api/boards")
