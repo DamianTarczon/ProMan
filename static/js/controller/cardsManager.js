@@ -19,5 +19,13 @@ export let cardsManager = {
 
 };
 
-function deleteButtonHandler(clickEvent) {
+async function deleteButtonHandler(clickEvent) {
+    let cardId = clickEvent.target.dataset.cardId;
+    await dataHandler.deleteCard(cardId);
+    let cards = document.getElementsByClassName('card');
+    for (let i=0; i<cards.length; i++) {
+        if (cards[i].dataset.cardId === cardId) {
+            cards[i].remove();
+        }
+    }
 }
