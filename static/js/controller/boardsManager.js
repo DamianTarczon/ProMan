@@ -25,3 +25,21 @@ function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
     cardsManager.loadCards(boardId);
 }
+
+async function deleteBoard(clickEvent) {
+    let boardId = clickEvent.target.dataset.boardId;
+    await dataHandler.deleteBoard(boardId);
+    let boards = document.getElementsByClassName('board');
+    for (let i=0; i<boards.length; i++) {
+        if (boards[i].dataset.boardId === boardId){
+            boards[i].parentElement.remove();
+        }
+    }
+}
+
+async function deleteColumn(clickEvent) {
+    let columnId = clickEvent.target.dataset.columnId;
+    await dataHandler.deleteCardsFromColumn(columnId);
+    //remove div with that column
+
+}

@@ -68,3 +68,37 @@ def get_card(card_id):
         """,
         {'card_id': card_id})
     return card
+
+
+def delete_card(card_id):
+    data_manager.execute_no_return(
+        """
+        DELETE FROM cards
+        WHERE id = %(card_id)s;
+        """, {"card_id": card_id}
+    )
+
+
+def delete_board(board_id):
+    data_manager.execute_no_return(
+        """
+        DELETE FROM cards
+        WHERE board_id = %(board_id)s;
+        """, {"board_id": board_id}
+    )
+    data_manager.execute_no_return(
+        """
+        DELETE FROM boards
+        WHERE id = %(board_id)s;
+        """, {"board_id": board_id}
+    )
+
+
+def delete_cards_from_column(column_id):
+    data_manager.execute_no_return(
+        """
+        DELETE FROM cards
+        WHERE status_id = %(column_id)s;
+        """, {"column_id": column_id}
+    )
+

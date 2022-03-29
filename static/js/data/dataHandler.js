@@ -11,6 +11,9 @@ export let dataHandler = {
             }
         }
     },
+    deleteBoard: async function (boardId) {
+        return await apiDelete(`/api/board/${boardId}/delete`);
+    },
     getStatuses: async function () {
         // the statuses are retrieved and then the callback function is called with the statuses
     },
@@ -36,6 +39,12 @@ export let dataHandler = {
         };
          await apiPost(`/api/boards/${boardId}/cards/`, data);
     },
+    deleteCard: async function (cardId) {
+        return await apiDelete(`/api/cards/${cardId}/delete`);
+    },
+    deleteCardsFromColumn: async function (columnId) {
+        return await apiDelete(`/api/column/${columnId}/delete`);
+    }
 };
 
 async function apiGet(url) {
@@ -65,6 +74,12 @@ async function apiPost(url, payload) {
 }
 
 async function apiDelete(url) {
+    let response = await fetch(url, {
+        method: "DELETE",
+    });
+    if (response.ok) {
+        return await response.json();
+    }
 }
 
 async function apiPut(url) {
