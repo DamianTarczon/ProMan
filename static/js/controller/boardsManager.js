@@ -17,6 +17,8 @@ export let boardsManager = {
             );
         }
     },
+
+
 };
 
 function showHideButtonHandler(clickEvent) {

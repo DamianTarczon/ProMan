@@ -33,7 +33,22 @@ def get_boards():
     """
     All the boards
     """
-    return queries.get_boards()
+    return render_template('cards.html')
+
+
+@app.route("/api/cards")
+@json_response
+def get_cards():
+    """
+    All the cards
+    """
+    return queries.get_cards()
+
+
+@app.route("/api/cards/<int:card_id>")
+@json_response
+def get_card(card_id: int):
+    return queries.get_card(card_id)
 
 
 @app.route("/api/boards/<int:board_id>/cards/")

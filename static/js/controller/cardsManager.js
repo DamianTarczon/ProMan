@@ -17,7 +17,14 @@ export let cardsManager = {
         }
     },
 
-};
+    changeTitle: async function (cardId){
+        let card = dataHandler.getCard(cardId);
+
+    }
+
+
+
+}
 
 function deleteButtonHandler(clickEvent) {
 }
