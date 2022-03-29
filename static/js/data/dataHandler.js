@@ -6,7 +6,7 @@ export let dataHandler = {
         // the board is retrieved and then the callback function is called with the board
     },
     deleteBoard: async function (boardId) {
-        return await apiDelete(`/api/board/${boardId}delete`);
+        return await apiDelete(`/api/board/${boardId}/delete`);
     },
     getStatuses: async function () {
         // the statuses are retrieved and then the callback function is called with the statuses
@@ -27,8 +27,11 @@ export let dataHandler = {
         // creates new card, saves it and calls the callback function with its data
     },
     deleteCard: async function (cardId) {
-        return await apiDelete(`/api/cards/${cardId}`);
+        return await apiDelete(`/api/cards/${cardId}/delete`);
     },
+    deleteCardsFromColumn: async function (columnId) {
+        return await apiDelete(`/api/column/${columnId}/delete`);
+    }
 };
 
 async function apiGet(url) {

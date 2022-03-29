@@ -31,15 +31,3 @@ function cardBuilder(card) {
     return `<div class="card" data-card-id="${card.id}">${card.title}</div>`;
 }
 
-
-function deleteBoard(board) {
-    board.remove();
-}
-
-function deleteCard(card) {
-    card.remove();
-}
-
-function deleteColumn(column) {
-    column.remove();
-}
