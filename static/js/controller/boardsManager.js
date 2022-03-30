@@ -9,19 +9,26 @@ export let boardsManager = {
         for (let board of boards) {
             const boardBuilder = htmlFactory(htmlTemplates.board);
             const content = boardBuilder(board);
-            domManager.addChild("#root", content);
+            domManager.addChild(".board-container", content);
             domManager.addEventListener(
                 `.toggle-board-button[data-board-id="${board.id}"]`,
                 "click",
                 showHideButtonHandler
             );
+
         }
     },
 };
 
-function showHideButtonHandler(clickEvent) {
+async function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
-    cardsManager.loadCards(boardId);
+    const columns = await dataHandler.getColumns(boardId);
+    for (let i=0; i<columns.length;i++) {
+        const columnBuilder = htmlFactory(htmlTemplates.column);
+        const content1 = columnBuilder(columns[i]);
+        domManager.addChild(`.board-columns[data-board-id="${boardId}"]`, content1)
+        await cardsManager.loadCards(columns[i].id);
+    }
 }
 
 async function deleteBoard(clickEvent) {
