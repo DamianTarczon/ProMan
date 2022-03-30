@@ -20,6 +20,7 @@ SET default_with_oids = false;
 DROP TABLE IF EXISTS statuses CASCADE;
 DROP TABLE IF EXISTS boards CASCADE;
 DROP TABLE IF EXISTS cards;
+DROP TABLE IF EXISTS columns;
 
 ---
 --- create tables
@@ -50,6 +51,7 @@ CREATE TABLE columns (
     status_id   INTEGER             NOT NULL,
     title       VARCHAR (200)       NOT NULL
 
+
 );
 
 ---
@@ -78,6 +80,19 @@ INSERT INTO cards VALUES (nextval('cards_id_seq'), 2, 4, 'done card 1', 1, 8);
 INSERT INTO cards VALUES (nextval('cards_id_seq'), 2, 4, 'done card 1', 2, 8);
 
 ---
+--- add columns
+---
+
+INSERT INTO columns VALUES (1,1,1,'new');
+INSERT INTO columns VALUES (2,1,2,'in progress');
+INSERT INTO columns VALUES (3,1,3,'testing');
+INSERT INTO columns VALUES (4,1,4,'done');
+INSERT INTO columns VALUES (5,2,1,'new');
+INSERT INTO columns VALUES (6,2,2,'in progress');
+INSERT INTO columns VALUES (7,2,3,'testing');
+INSERT INTO columns VALUES (8,2,4,'done');
+
+---
 --- add constraints
 ---
 
@@ -93,8 +108,8 @@ ALTER TABLE ONLY columns
 ALTER TABLE ONLY columns
     ADD CONSTRAINT fk_columns_board_id FOREIGN KEY (board_id) REFERENCES boards(id);
 
-ALTER TABLE ONLY columns
-    ADD CONSTRAINT fk_columns_title FOREIGN KEY (title) REFERENCES statuses(title);
-
+-- ALTER TABLE ONLY columns
+--     ADD CONSTRAINT fk_columns_title FOREIGN KEY (title) REFERENCES statuses(title);
+--
 ALTER TABLE ONLY cards
     ADD CONSTRAINT fk_cards_column_id FOREIGN KEY (column_id) REFERENCES columns(id);
