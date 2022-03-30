@@ -101,3 +101,15 @@ def delete_cards_from_column(column_id):
         """, {"column_id": column_id}
     )
 
+
+def update_card(card_id, title):
+    data_manager.execute_no_return(
+        """
+        UPDATE cards
+        SET title = %(title)s
+        WHERE id = %(card_id)s
+        ;
+        """,
+        {'title': title, 'card_id': card_id}
+
+    )

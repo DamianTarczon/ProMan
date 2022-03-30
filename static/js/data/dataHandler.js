@@ -25,7 +25,12 @@ export let dataHandler = {
     },
     getCard: async function (cardId) {
         // the card is retrieved and then the callback function is called with the card
-
+        const cards = await apiGet(`/api/cards`);
+        for (let card of cards){
+            if (card.id == cardId) {
+                return card
+            }
+        }
     },
     createNewBoard: async function (boardTitle) {
         // creates new board, saves it and calls the callback function with its data
@@ -37,7 +42,7 @@ export let dataHandler = {
             status_id: statusId,
             title: cardTitle,
         };
-         await apiPost(`/api/boards/${boardId}/cards/`, data);
+        await apiPost(`/api/boards/${boardId}/cards/`, data);
     },
     deleteCard: async function (cardId) {
         return await apiDelete(`/api/cards/${cardId}/delete`);
@@ -45,11 +50,15 @@ export let dataHandler = {
     deleteCardsFromColumn: async function (columnId) {
         return await apiDelete(`/api/column/${columnId}/delete`);
     },
-    updateCardTitle: async function (title,cardId){
-        let date = {
-            title: title,
+    updateCardTitle: async function (data) {
+        let DB = {
+            id: data.id,
+            board_id: data.board_id,
+            status_id: data.status_id,
+            title: data.title,
+            card_order: data.card_order,
         };
-        return await apiPatch(`/api/cards/${cardId}`,date);
+        return await apiPost(`/api/cards/${data.id}`, DB);
     }
 };
 
@@ -63,20 +72,23 @@ async function apiGet(url) {
 }
 
 async function apiPost(url, payload) {
+    console.log(payload,"1");
     fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(payload),
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    })
+        .then(response => {
+            console.log(response.json(),"json")
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success ADD:', data);
-            })
-            .catch((error) => {
-                console.error('Error ADD:', error);
-            });
+        .then(data => {
+            console.log('Success ADD:', data);
+        })
+        .catch((error) => {
+            console.error('Error ADD:', error);
+        });
 }
 
 async function apiDelete(url) {
@@ -92,21 +104,5 @@ async function apiPut(url) {
 
 }
 
-async function apiPatch(url, updated) {
-    fetch(url, {
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    method: "PATCH",
-
-    body: JSON.stringify(updated)
-  })
-    .then(response => response.json())
-            .then(data => {
-                console.log('Success PATCH:', data);
-            })
-            .catch((error) => {
-                console.error('Error PATCH:', error);
-            });
+async function apiPatch(url) {
 }

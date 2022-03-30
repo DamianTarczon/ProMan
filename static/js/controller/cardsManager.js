@@ -33,5 +33,7 @@ async function deleteButtonHandler(clickEvent) {
 
 async function changeTitle(clickEvent) {
     let cardId = clickEvent.target.dataset.cardId;
-    await dataHandler.updateCardTitle('Update', cardId)
+    let card = await dataHandler.getCard(cardId);
+    card.title = "Working";
+    await dataHandler.updateCardTitle(card)
 }
