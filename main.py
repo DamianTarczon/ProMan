@@ -56,14 +56,14 @@ def get_card(card_id: int):
 
 
 
-@app.route("/api/boards/<int:board_id>/cards/")
+@app.route("/api/boards/<int:column_id>/cards/")
 @json_response
-def get_cards_for_board(board_id: int):
+def get_cards_for_board_by_column_id(column_id: int):
     """
     All cards that belongs to a board
     :param board_id: id of the parent board
     """
-    return queries.get_cards_for_board(board_id)
+    return queries.get_cards_for_board_by_column_id(column_id)
 
 
 @app.route("/api/cards/<int:card_id>/delete", methods=['DELETE'])
@@ -82,6 +82,15 @@ def delete_board(board_id: int):
 @json_response
 def delete_cards_from_column(column_id: int):
     queries.delete_cards_from_column(column_id)
+
+
+@app.route("/api/<int:board_id>/columns")
+@json_response
+def get_columns(board_id: int):
+    """
+    All the boards
+    """
+    return queries.get_columns(board_id)
 
 
 def main():

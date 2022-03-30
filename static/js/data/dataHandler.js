@@ -20,8 +20,8 @@ export let dataHandler = {
     getStatus: async function (statusId) {
         // the status is retrieved and then the callback function is called with the status
     },
-    getCardsByBoardId: async function (boardId) {
-        return await apiGet(`/api/boards/${boardId}/cards/`);
+    getCardsByColumnId: async function (columnId) {
+        return await apiGet(`/api/boards/${columnId}/cards/`);
     },
     getCard: async function (cardId) {
         // the card is retrieved and then the callback function is called with the card
@@ -46,6 +46,9 @@ export let dataHandler = {
     },
     deleteCard: async function (cardId) {
         return await apiDelete(`/api/cards/${cardId}/delete`);
+    },
+    getColumns: async function (boardId) {
+        return await apiGet(`/api/${boardId}/columns`);
     },
     deleteCardsFromColumn: async function (columnId) {
         return await apiDelete(`/api/column/${columnId}/delete`);

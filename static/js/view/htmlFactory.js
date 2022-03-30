@@ -1,10 +1,12 @@
 export const htmlTemplates = {
     board: 1,
-    card: 2
+    column: 2,
+    card: 3
 }
 
 export const builderFunctions = {
     [htmlTemplates.board]: boardBuilder,
+    [htmlTemplates.column]: columnBuilder,
     [htmlTemplates.card]: cardBuilder
 };
 
@@ -21,13 +23,28 @@ export function htmlFactory(template) {
 }
 
 function boardBuilder(board) {
-    return `<div class="board-container">
-                <div class="board" data-board-id=${board.id}>${board.title}</div>
+    return `<section class="board">
+                <div class="board-header">
+                <span class="board">${board.title}</span>
+                <button class="rename">RENAME</button>
                 <button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button>
+                <button class="board-toggle"><i class="fas fa-chevron-down">zwin</i></button>
+                </div>
+                <div class="board-columns" data-board-id=${board.id}>
+                </div>
+            </section>`;
+}
+
+function columnBuilder(column) {
+    return `<div class="board-column">
+                <div class="board-column-title">${column.title}</div>
+                <div class="board-column-content" data-column-id="${column.id}"></div>
             </div>`;
 }
 
 function cardBuilder(card) {
-    return `<div class="card" data-card-id="${card.id}">${card.title}</div>`;
+    return `<div class="card" data-card-id="${card.id}">
+                <div class="card-title">${card.title}</div>
+                <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+            </div>`;
 }
-

@@ -45,14 +45,14 @@ def get_cards():
     )
 
 
-def get_cards_for_board(board_id):
+def get_cards_for_board_by_column_id(column_id):
     matching_cards = data_manager.execute_select(
         """
         SELECT * FROM cards
-        WHERE cards.board_id = %(board_id)s
+        WHERE cards.column_id = %(column_id)s
         ;
-        """,
-        {"board_id": board_id})
+        """
+        , {"column_id": column_id})
 
     return matching_cards
 
@@ -101,15 +101,3 @@ def delete_cards_from_column(column_id):
         """, {"column_id": column_id}
     )
 
-
-def update_card(card_id, title):
-    data_manager.execute_no_return(
-        """
-        UPDATE cards
-        SET title = %(title)s
-        WHERE id = %(card_id)s
-        ;
-        """,
-        {'title': title, 'card_id': card_id}
-
-    )

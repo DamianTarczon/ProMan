@@ -3,22 +3,21 @@ import {htmlFactory, htmlTemplates} from "../view/htmlFactory.js";
 import {domManager} from "../view/domManager.js";
 
 export let cardsManager = {
-    loadCards: async function (boardId) {
-        const cards = await dataHandler.getCardsByBoardId(boardId);
+    loadCards: async function (columnId) {
+        const cards = await dataHandler.getCardsByColumnId(columnId);
         for (let card of cards) {
             const cardBuilder = htmlFactory(htmlTemplates.card);
             const content = cardBuilder(card);
-            domManager.addChild(`.board[data-board-id="${boardId}"]`, content);
+            domManager.addChild(`.board-column-content[data-column-id="${columnId}"]`, content);
             domManager.addEventListener(
                 `.card[data-card-id="${card.id}"]`,
-                "click",
-                changeTitle
+                "button",
+                deleteButtonHandler
             );
-
-
         }
     },
-}
+
+};
 
 async function deleteButtonHandler(clickEvent) {
     let cardId = clickEvent.target.dataset.cardId;
