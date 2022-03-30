@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, url_for
 from dotenv import load_dotenv
 from util import json_response
@@ -34,7 +33,7 @@ def get_boards():
     """
     All the boards
     """
-    return render_template('cards.html')
+    return queries.get_boards()
 
 
 @app.route("/api/cards")
@@ -46,7 +45,7 @@ def get_cards():
     return queries.get_cards()
 
 
-@app.route("/api/cards/<int:card_id>")
+@app.route("/api/cards/<int:card_id>", methods=["GET", "POST", "PATCH"])
 @json_response
 def get_card(card_id: int):
     return queries.get_card(card_id)

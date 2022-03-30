@@ -12,27 +12,26 @@ export let cardsManager = {
             domManager.addEventListener(
                 `.card[data-card-id="${card.id}"]`,
                 "click",
-                deleteButtonHandler
+                changeTitle
             );
+
+
         }
     },
-
-    changeTitle: async function (cardId){
-        let card = dataHandler.getCard(cardId);
-
-    }
-
-
-
 }
 
 async function deleteButtonHandler(clickEvent) {
     let cardId = clickEvent.target.dataset.cardId;
     await dataHandler.deleteCard(cardId);
     let cards = document.getElementsByClassName('card');
-    for (let i=0; i<cards.length; i++) {
+    for (let i = 0; i < cards.length; i++) {
         if (cards[i].dataset.cardId === cardId) {
             cards[i].remove();
         }
     }
+}
+
+async function changeTitle(clickEvent) {
+    let cardId = clickEvent.target.dataset.cardId;
+    await dataHandler.updateCardTitle('Update', cardId)
 }

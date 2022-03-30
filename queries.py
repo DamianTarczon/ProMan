@@ -58,7 +58,6 @@ def get_cards_for_board(board_id):
 
 
 def get_card(card_id):
-    print(card_id)
     card = data_manager.execute_select(
         """
         SELECT * 

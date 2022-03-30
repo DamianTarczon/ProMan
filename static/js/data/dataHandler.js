@@ -44,6 +44,12 @@ export let dataHandler = {
     },
     deleteCardsFromColumn: async function (columnId) {
         return await apiDelete(`/api/column/${columnId}/delete`);
+    },
+    updateCardTitle: async function (title,cardId){
+        let date = {
+            title: title,
+        };
+        return await apiPatch(`/api/cards/${cardId}`,date);
     }
 };
 
@@ -66,10 +72,10 @@ async function apiPost(url, payload) {
         })
             .then(response => response.json())
             .then(data => {
-                console.log('Success:', data);
+                console.log('Success ADD:', data);
             })
             .catch((error) => {
-                console.error('Error:', error);
+                console.error('Error ADD:', error);
             });
 }
 
@@ -86,5 +92,21 @@ async function apiPut(url) {
 
 }
 
-async function apiPatch(url) {
+async function apiPatch(url, updated) {
+    fetch(url, {
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    method: "PATCH",
+
+    body: JSON.stringify(updated)
+  })
+    .then(response => response.json())
+            .then(data => {
+                console.log('Success PATCH:', data);
+            })
+            .catch((error) => {
+                console.error('Error PATCH:', error);
+            });
 }
