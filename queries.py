@@ -87,17 +87,29 @@ def delete_board(board_id):
     )
     data_manager.execute_no_return(
         """
+        DELETE FROM columns
+        WHERE board_id = %(board_id)s;
+        """, {"board_id": board_id}
+    )
+    data_manager.execute_no_return(
+        """
         DELETE FROM boards
         WHERE id = %(board_id)s;
         """, {"board_id": board_id}
     )
 
 
-def delete_cards_from_column(column_id):
-    return data_manager.execute_select(
+def delete_column(column_id):
+    data_manager.execute_no_return(
         """
         DELETE FROM cards
-        WHERE status_id = %(column_id)s;
+        WHERE column_id = %(column_id)s;
+        """, {"column_id": column_id}
+    )
+    data_manager.execute_no_return(
+        """
+        DELETE FROM columns
+        WHERE id = %(column_id)s;
         """, {"column_id": column_id}
     )
 
@@ -134,3 +146,29 @@ def update_board(board):
         """, {"board_title": board["title"], "board_id": board["id"]}
     )
 
+
+def create_new_board(title):
+    board_id = data_manager.execute_select(
+        """
+        INSERT INTO boards (title)
+        VALUES (%s)
+        RETURNING id
+        """, (title,)
+    )[0]['id']
+    column_titles = data_manager.execute_select(
+        """
+        SELECT title
+        FROM statuses
+        """
+    )
+    for i in range(4):
+        insert_column_into_new_board(board_id, i+1, column_titles[i]['title'])
+
+
+def insert_column_into_new_board(board_id, status_id, title):
+    data_manager.execute_no_return(
+        """
+            INSERT INTO columns (board_id, status_id, title)
+            VALUES ((%s), (%s), (%s))
+            """, (board_id, status_id, title)
+    )

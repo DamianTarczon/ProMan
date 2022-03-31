@@ -35,6 +35,16 @@ def get_boards():
     """
     return queries.get_boards()
 
+@app.route("/api/boards/post", methods= ["POST"])
+@json_response
+def create_new_board():
+    title = request.json
+    board_id = queries.create_new_board(title)
+    print(board_id)
+
+
+
+
 
 
 
@@ -83,8 +93,8 @@ def delete_board(board_id: int):
 
 @app.route("/api/column/<int:column_id>/delete", methods=['DELETE'])
 @json_response
-def delete_cards_from_column(column_id: int):
-    queries.delete_cards_from_column(column_id)
+def delete_column(column_id: int):
+    queries.delete_column(column_id)
 
 
 @app.route("/api/<int:board_id>/columns")

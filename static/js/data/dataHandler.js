@@ -7,7 +7,7 @@ export let dataHandler = {
             id: board.id,
             title: board.title
         };
-        return await apiPost(`/api/boards`, DB);
+        return await apiPut(`/api/${boardId}/put`, DB);
 
     },
 
@@ -42,6 +42,7 @@ export let dataHandler = {
         }
     },
     createNewBoard: async function (boardTitle) {
+        return await apiPost(`/api/boards/post`, boardTitle);
         // creates new board, saves it and calls the callback function with its data
     },
     createNewCard: async function (cardTitle, boardId, statusId) {
@@ -59,7 +60,7 @@ export let dataHandler = {
     getColumns: async function (boardId) {
         return await apiGet(`/api/${boardId}/columns`);
     },
-    deleteCardsFromColumn: async function (columnId) {
+    deleteColumn: async function (columnId) {
         return await apiDelete(`/api/column/${columnId}/delete`);
     },
     updateCardTitle: async function (data) {
@@ -70,7 +71,7 @@ export let dataHandler = {
             title: data.title,
             card_order: data.card_order,
         };
-        return await apiPut(`/api/cards/${data.id}`, DB);
+        return await apiPost(`/api/cards/${data.id}`, DB);
     }
 };
 
@@ -84,7 +85,8 @@ async function apiGet(url) {
 }
 
 async function apiPost(url, payload) {
-    fetch(url, {
+    console.log(payload,"1");
+    await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -112,6 +114,7 @@ async function apiDelete(url) {
 }
 
 async function apiPut(url, payload) {
+    console.log(payload, "1");
     await fetch(url, {
         method: 'PUT',
         headers: {
