@@ -121,3 +121,15 @@ def update_card(card_id, title):
         {'title': title,
          'card_id': card_id}
     )
+
+
+def update_board(board):
+    return data_manager.execute_select(
+        """
+        UPDATE boards
+        SET title = %(board_title)s
+        WHERE id = %(board_id)s
+        RETURNING *;
+        """, {"board_title": board["title"], "board_id": board["id"]}
+    )
+

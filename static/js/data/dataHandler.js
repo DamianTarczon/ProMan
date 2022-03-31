@@ -2,6 +2,15 @@ export let dataHandler = {
     getBoards: async function () {
         return await apiGet("/api/boards");
     },
+    updateBoard: async function (boardId, board) {
+        let DB = {
+            id: board.id,
+            title: board.title
+        };
+        return await apiPut(`/api/${boardId}/put`, DB);
+
+    },
+
     getBoard: async function (boardId) {
         // the board is retrieved and then the callback function is called with the board
         let boards = apiGet(`/api/boards`)
@@ -103,8 +112,24 @@ async function apiDelete(url) {
     }
 }
 
-async function apiPut(url) {
-
+async function apiPut(url, payload) {
+    console.log(payload, "1");
+    await fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+    })
+        .then(response => {
+            console.log(response.json(), "json")
+        })
+        .then(data => {
+            console.log('Success ADD:', data);
+        })
+        .catch((error) => {
+            console.error('Error ADD:', error);
+        });
 }
 
 async function apiPatch(url) {

@@ -15,13 +15,38 @@ export let boardsManager = {
                 "click",
                 showHideButtonHandler
             );
-
+            domManager.addEventListener(
+                `.board-title[data-board-id="${board.id}"]`,
+                'click',
+                changeTitleBox
+            );
+            domManager.addEventListener(
+                `.board-header[data-board-id="${board.id}"]`,
+                'click',
+                (e) => {submitBoardTitleChange(e, board.id)}
+            )
         }
     },
 
 
 };
+async function changeTitleBox(clickEvent) {
 
+    const boardId = clickEvent.target.dataset.boardId;
+    let inputBox = htmlFactory(htmlTemplates.inputBox)(boardId, clickEvent.target.innerHTML);
+    domManager.addChild(`.board-title[data-board-id="${boardId}"]`,inputBox, "afterend")
+    //  we can find better way to hide current title
+    clickEvent.target.style.display='none';
+}
+async function submitBoardTitleChange(clickEvent, boardId) {
+    if (clickEvent && clickEvent.target.dataset.boardId == boardId && clickEvent.target.tagName == 'BUTTON') {
+        let input = document.querySelector(`input[data-board-id="${boardId}"]`);
+        await dataHandler.updateBoard(boardId,{id:boardId, title:input.value})
+        // we delete all boards, than we are loading boards again
+        document.querySelector('.board-container').innerHTML='';
+        await boardsManager.loadBoards()
+    }
+}
 async function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
     const columns = await dataHandler.getColumns(boardId);
