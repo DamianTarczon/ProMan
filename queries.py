@@ -99,11 +99,17 @@ def delete_board(board_id):
     )
 
 
-def delete_cards_from_column(column_id):
-    return data_manager.execute_select(
+def delete_column(column_id):
+    data_manager.execute_no_return(
         """
         DELETE FROM cards
-        WHERE status_id = %(column_id)s;
+        WHERE column_id = %(column_id)s;
+        """, {"column_id": column_id}
+    )
+    data_manager.execute_no_return(
+        """
+        DELETE FROM columns
+        WHERE id = %(column_id)s;
         """, {"column_id": column_id}
     )
 

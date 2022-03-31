@@ -39,8 +39,8 @@ function boardBuilder(board) {
 }
 
 function columnBuilder(column) {
-    return `<div class="board-column">
-                <div class="board-column-title">${column.title}</div>
+    return `<div class="board-column" data-column-id="${column.id}">
+                <div class="board-column-title">${column.title}<a class="column-delete" data-column-id="${column.id}" >🗑</a></div>               
                 <div class="board-column-content" data-column-id="${column.id}"></div>
             </div>`;
 }

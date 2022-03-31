@@ -79,8 +79,8 @@ def delete_board(board_id: int):
 
 @app.route("/api/column/<int:column_id>/delete", methods=['DELETE'])
 @json_response
-def delete_cards_from_column(column_id: int):
-    queries.delete_cards_from_column(column_id)
+def delete_column(column_id: int):
+    queries.delete_column(column_id)
 
 
 @app.route("/api/<int:board_id>/columns")

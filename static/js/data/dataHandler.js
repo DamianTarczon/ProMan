@@ -59,7 +59,7 @@ export let dataHandler = {
     getColumns: async function (boardId) {
         return await apiGet(`/api/${boardId}/columns`);
     },
-    deleteCardsFromColumn: async function (columnId) {
+    deleteColumn: async function (columnId) {
         return await apiDelete(`/api/column/${columnId}/delete`);
     },
     updateCardTitle: async function (data) {

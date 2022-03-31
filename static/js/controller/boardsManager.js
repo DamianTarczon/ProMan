@@ -54,10 +54,16 @@ async function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
     const columns = await dataHandler.getColumns(boardId);
     for (let i=0; i<columns.length;i++) {
+        const column = columns[i]
         const columnBuilder = htmlFactory(htmlTemplates.column);
-        const columnContent = columnBuilder(columns[i]);
-        domManager.addChild(`.board-columns[data-board-id="${boardId}"]`, columnContent)
-        await cardsManager.loadCards(columns[i].id);
+        const columnContent = columnBuilder(column);
+        domManager.addChild(`.board-columns[data-board-id="${boardId}"]`, columnContent);
+        domManager.addEventListener(
+            `.column-delete[data-column-id="${column.id}"]`,
+            'click',
+            deleteColumn
+        );
+        await cardsManager.loadCards(column.id);
     }
 }
 
@@ -74,7 +80,12 @@ async function deleteBoard(clickEvent) {
 
 async function deleteColumn(clickEvent) {
     let columnId = clickEvent.target.dataset.columnId;
-    await dataHandler.deleteCardsFromColumn(columnId);
-    //remove div with that column
-
+    console.log(columnId);
+    await dataHandler.deleteColumn(columnId);
+    let columns = document.getElementsByClassName('board-column');
+    for (let i=0; i<columns.length; i++) {
+        if (columns[i].getAttribute('data-column-id') === columnId){
+            columns[i].remove();
+        }
+    }
 }
