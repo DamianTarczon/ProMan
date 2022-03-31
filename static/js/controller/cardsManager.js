@@ -14,7 +14,10 @@ export let cardsManager = {
                 "button",
                 deleteButtonHandler
             );
+
         }
+            // let cardTitle = document.getElementsByClassName('card-title');
+            // cardTitle.addEventListener( 'click' => {})
     },
 
 };
@@ -30,8 +33,12 @@ async function deleteButtonHandler(clickEvent) {
     }
 }
 
+
 async function changeTitle(clickEvent) {
     let cardId = clickEvent.target.dataset.cardId;
+    console.log(cardId);
+    let input = htmlFactory(htmlTemplates.input);
+    // domManager.addChild(`.card[data-card-id=${card_id}`,input(card_id));
     let card = await dataHandler.getCard(cardId);
     card.title = "Working";
     await dataHandler.updateCardTitle(card)

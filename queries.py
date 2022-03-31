@@ -51,8 +51,8 @@ def get_cards_for_board_by_column_id(column_id):
         SELECT * FROM cards
         WHERE cards.column_id = %(column_id)s
         ;
-        """
-        , {"column_id": column_id})
+        """,
+        {"column_id": column_id})
 
     return matching_cards
 
@@ -108,4 +108,16 @@ def get_columns(board_id):
         SELECT * FROM columns
         WHERE board_id = %(board_id)s;
         """, {"board_id": board_id}
+    )
+
+
+def update_card(card_id, title):
+    return data_manager.execute_select(
+        """
+        UPDATE cards
+        SET title = %(title)s
+        WHERE id = %(card_id)s;
+        """,
+        {'title': title,
+         'card_id': card_id}
     )
