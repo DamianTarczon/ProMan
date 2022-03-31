@@ -133,3 +133,11 @@ def update_board(board):
         """, {"board_title": board["title"], "board_id": board["id"]}
     )
 
+def create_new_board(title):
+    return data_manager.execute_select(
+        """
+        INSERT INTO boards (title)
+        VALUES (%s)
+        RETURNING id
+        """, (title,)
+    )

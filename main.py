@@ -35,6 +35,16 @@ def get_boards():
     """
     return queries.get_boards()
 
+@app.route("/api/boards/post", methods= ["POST"])
+@json_response
+def create_new_board():
+    title = request.json
+    board_id = queries.create_new_board(title)
+    print(board_id)
+
+
+
+
 
 @app.route("/api/cards")
 @json_response
