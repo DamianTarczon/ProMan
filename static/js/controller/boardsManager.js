@@ -8,8 +8,8 @@ export let boardsManager = {
         const boards = await dataHandler.getBoards();
         for (let board of boards) {
             const boardBuilder = htmlFactory(htmlTemplates.board);
-            const content = boardBuilder(board);
-            domManager.addChild(".board-container", content);
+            const boardContent = boardBuilder(board);
+            domManager.addChild(".board-container", boardContent);
             domManager.addEventListener(
                 `.toggle-board-button[data-board-id="${board.id}"]`,
                 "click",
@@ -27,8 +27,6 @@ export let boardsManager = {
             )
         }
     },
-
-
 };
 async function changeTitleBox(clickEvent) {
 
@@ -52,8 +50,8 @@ async function showHideButtonHandler(clickEvent) {
     const columns = await dataHandler.getColumns(boardId);
     for (let i=0; i<columns.length;i++) {
         const columnBuilder = htmlFactory(htmlTemplates.column);
-        const content1 = columnBuilder(columns[i]);
-        domManager.addChild(`.board-columns[data-board-id="${boardId}"]`, content1)
+        const columnContent = columnBuilder(columns[i]);
+        domManager.addChild(`.board-columns[data-board-id="${boardId}"]`, columnContent)
         await cardsManager.loadCards(columns[i].id);
     }
 }

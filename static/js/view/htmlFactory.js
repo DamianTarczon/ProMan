@@ -48,7 +48,7 @@ function columnBuilder(column) {
 function cardBuilder(card) {
     return `<div class="card" data-card-id="${card.id}">
                 <div class="card-title">${card.title}</div>
-                <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
+                <div class="card-remove"><a class="bin" data-card-id="${card.id}" >🗑</a></div>
             </div>`;
 }
 

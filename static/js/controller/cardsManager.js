@@ -10,8 +10,8 @@ export let cardsManager = {
             const content = cardBuilder(card);
             domManager.addChild(`.board-column-content[data-column-id="${columnId}"]`, content);
             domManager.addEventListener(
-                `.card[data-card-id="${card.id}"]`,
-                "button",
+                `.bin[data-card-id="${card.id}"]`,
+                "click",
                 deleteButtonHandler
             );
         }
@@ -20,11 +20,11 @@ export let cardsManager = {
 };
 
 async function deleteButtonHandler(clickEvent) {
-    let cardId = clickEvent.target.dataset.cardId;
+    let cardId = clickEvent.target.getAttribute('data-card-id');
     await dataHandler.deleteCard(cardId);
     let cards = document.getElementsByClassName('card');
     for (let i = 0; i < cards.length; i++) {
-        if (cards[i].dataset.cardId === cardId) {
+        if (cards[i].getAttribute('data-card-id') === cardId) {
             cards[i].remove();
         }
     }
