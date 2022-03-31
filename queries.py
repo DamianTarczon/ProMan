@@ -87,6 +87,12 @@ def delete_board(board_id):
     )
     data_manager.execute_no_return(
         """
+        DELETE FROM columns
+        WHERE board_id = %(board_id)s;
+        """, {"board_id": board_id}
+    )
+    data_manager.execute_no_return(
+        """
         DELETE FROM boards
         WHERE id = %(board_id)s;
         """, {"board_id": board_id}

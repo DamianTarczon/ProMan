@@ -24,7 +24,12 @@ export let boardsManager = {
                 `.board-header[data-board-id="${board.id}"]`,
                 'click',
                 (e) => {submitBoardTitleChange(e, board.id)}
-            )
+            );
+            domManager.addEventListener(
+                `.board-delete[data-board-id="${board.id}"]`,
+                'click',
+                deleteBoard
+            );
         }
     },
 };
@@ -61,8 +66,8 @@ async function deleteBoard(clickEvent) {
     await dataHandler.deleteBoard(boardId);
     let boards = document.getElementsByClassName('board');
     for (let i=0; i<boards.length; i++) {
-        if (boards[i].dataset.boardId === boardId){
-            boards[i].parentElement.remove();
+        if (boards[i].getAttribute('data-board-id') === boardId){
+            boards[i].remove();
         }
     }
 }
