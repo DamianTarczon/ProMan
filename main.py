@@ -27,13 +27,16 @@ def login():
     return render_template('login.html')
 
 
-@app.route("/api/boards")
+@app.route("/api/boards", methods=['GET','POST'])
 @json_response
 def get_boards():
     """
     All the boards
     """
     return queries.get_boards()
+
+
+
 
 
 @app.route("/api/cards")
@@ -45,14 +48,15 @@ def get_cards():
     return queries.get_cards()
 
 
-@app.route("/api/cards/<int:card_id>", methods=["GET", "POST"])
+@app.route("/api/cards/<int:card_id>", methods=["GET", "PUT"])
 @json_response
 def get_card(card_id: int):
     if request.method == 'GET':
         return queries.get_card(card_id)
-    elif request.method == 'POST':
+    elif request.method == 'PUT':
         card = request.json
-        queries.update_card(card['id'], card['title'])
+        title = queries.update_card_title(card['id'], card['title'])
+        print(title)
 
 
 @app.route("/api/boards/<int:column_id>/cards/")

@@ -111,12 +111,13 @@ def get_columns(board_id):
     )
 
 
-def update_card(card_id, title):
+def update_card_title(card_id, title):
     return data_manager.execute_select(
         """
         UPDATE cards
         SET title = %(title)s
-        WHERE id = %(card_id)s;
+        WHERE id = %(card_id)s
+        RETURNING title;
         """,
         {'title': title,
          'card_id': card_id}

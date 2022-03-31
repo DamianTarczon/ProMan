@@ -20,11 +20,11 @@ export let boardsManager = {
                 'click',
                 changeTitleBox
             );
-            domManager.addEventListener(
-                `.board-header[data-board-id="${board.id}"]`,
-                'click',
-                (e) => {submitBoardTitleChange(e, board.id)}
-            )
+            // domManager.addEventListener(
+            //     `.board-header[data-board-id="${board.id}"]`,
+            //     'click',
+            //     (e) => {submitBoardTitleChange(e, board.id)}
+            // )
         }
     },
 
@@ -38,15 +38,15 @@ async function changeTitleBox(clickEvent) {
     //  we can find better way to hide current title
     clickEvent.target.style.display='none';
 }
-async function submitBoardTitleChange(clickEvent, boardId) {
-    if (clickEvent && clickEvent.target.dataset.boardId == boardId && clickEvent.target.tagName == 'BUTTON') {
-        let input = document.querySelector(`input[data-board-id="${boardId}"]`);
-        await dataHandler.updateBoard(boardId,{id:boardId, title:input.value})
-        // we delete all boards, than we are loading boards again
-        document.querySelector('.board-container').innerHTML='';
-        await boardsManager.loadBoards()
-    }
-}
+// async function submitBoardTitleChange(clickEvent, boardId) {
+//     if (clickEvent && clickEvent.target.dataset.boardId == boardId && clickEvent.target.tagName == 'BUTTON') {
+//         let input = document.querySelector(`input[data-board-id="${boardId}"]`);
+//         await dataHandler.updateBoard(boardId,{id:boardId, title:input.value})
+//         // we delete all boards, than we are loading boards again
+//         document.querySelector('.board-container').innerHTML='';
+//         await boardsManager.loadBoards()
+//     }
+// }
 async function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
     const columns = await dataHandler.getColumns(boardId);
@@ -58,20 +58,20 @@ async function showHideButtonHandler(clickEvent) {
     }
 }
 
-async function deleteBoard(clickEvent) {
-    let boardId = clickEvent.target.dataset.boardId;
-    await dataHandler.deleteBoard(boardId);
-    let boards = document.getElementsByClassName('board');
-    for (let i=0; i<boards.length; i++) {
-        if (boards[i].dataset.boardId === boardId){
-            boards[i].parentElement.remove();
-        }
-    }
-}
+// async function deleteBoard(clickEvent) {
+//     let boardId = clickEvent.target.dataset.boardId;
+//     await dataHandler.deleteBoard(boardId);
+//     let boards = document.getElementsByClassName('board');
+//     for (let i=0; i<boards.length; i++) {
+//         if (boards[i].dataset.boardId === boardId){
+//             boards[i].parentElement.remove();
+//         }
+//     }
+// }
 
-async function deleteColumn(clickEvent) {
-    let columnId = clickEvent.target.dataset.columnId;
-    await dataHandler.deleteCardsFromColumn(columnId);
-    //remove div with that column
-
-}
+// async function deleteColumn(clickEvent) {
+//     let columnId = clickEvent.target.dataset.columnId;
+//     await dataHandler.deleteCardsFromColumn(columnId);
+//     //remove div with that column
+//
+// }

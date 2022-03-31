@@ -2,16 +2,12 @@ export const htmlTemplates = {
     board: 1,
     column: 2,
     card: 3,
-    input: 4
-    card: 3,
     inputBox: 4
 }
 
 export const builderFunctions = {
     [htmlTemplates.board]: boardBuilder,
     [htmlTemplates.column]: columnBuilder,
-    [htmlTemplates.card]: cardBuilder,
-    [htmlTemplates.input]: inputBuilder
     [htmlTemplates.card]: cardBuilder,
     [htmlTemplates.inputBox]: inputBoxBuilder,
 
@@ -32,8 +28,7 @@ export function htmlFactory(template) {
 function boardBuilder(board) {
     return `<section class="board">
                 <div class="board-header" data-board-id="${board.id}">
-                <span class="board-title" data-board-id="${board.id}">${board.title}</span>
-                <button class="rename">RENAME</button>
+                <span class="board-title" data-board-id="${board.id}" contenteditable="true">${board.title}</span>
                 <button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button>
                 <button class="board-toggle"><i class="fas fa-chevron-down">zwin</i></button>
                 </div>
@@ -44,23 +39,18 @@ function boardBuilder(board) {
 
 function columnBuilder(column) {
     return `<div class="board-column">
-                <div class="board-column-title">${column.title}</div>
+                <div class="board-column-title" contenteditable="true">${column.title}</div>
                 <div class="board-column-content" data-column-id="${column.id}"></div>
             </div>`;
 }
 
 function cardBuilder(card) {
     return `<div class="card" data-card-id="${card.id}">
-                <div class="card-title">${card.title}</div>
+                <div class="card-title" data-card-id="${card.id}" contenteditable="true">${card.title}</div>
                 <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
             </div>`;
 }
 
-function inputBuilder(card){
-    return `<div class="input" data-card-id="${card.id}">
-                <input type="text" id="title">
-            </div>`;
-}
 
 function inputBoxBuilder(boardId, boardTitle) {
     return `<input type="text" name="title" data-board-id="${boardId}" value="${boardTitle}">

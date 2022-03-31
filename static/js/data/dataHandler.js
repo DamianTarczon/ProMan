@@ -7,7 +7,7 @@ export let dataHandler = {
             id: board.id,
             title: board.title
         };
-        return await apiPut(`/api/${boardId}/put`, DB);
+        return await apiPost(`/api/boards`, DB);
 
     },
 
@@ -70,7 +70,7 @@ export let dataHandler = {
             title: data.title,
             card_order: data.card_order,
         };
-        return await apiPost(`/api/cards/${data.id}`, DB);
+        return await apiPut(`/api/cards/${data.id}`, DB);
     }
 };
 
@@ -84,7 +84,6 @@ async function apiGet(url) {
 }
 
 async function apiPost(url, payload) {
-    console.log(payload,"1");
     fetch(url, {
         method: 'POST',
         headers: {
@@ -113,7 +112,6 @@ async function apiDelete(url) {
 }
 
 async function apiPut(url, payload) {
-    console.log(payload, "1");
     await fetch(url, {
         method: 'PUT',
         headers: {
