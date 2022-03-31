@@ -1,8 +1,8 @@
 export let domManager = {
-    addChild(parentIdentifier, childContent) {
+    addChild(parentIdentifier, childContent, insertPosition='beforeend') {
         const parent = document.querySelector(parentIdentifier);
         if (parent) {
-            parent.insertAdjacentHTML("beforeend", childContent);
+            parent.insertAdjacentHTML(insertPosition, childContent);
         } else {
             console.error("could not find such html element: " + parentIdentifier);
         }

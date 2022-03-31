@@ -92,6 +92,16 @@ def get_columns(board_id: int):
     return queries.get_columns(board_id)
 
 
+@app.route("/api/<int:board_id>/put", methods=['PUT'])
+@json_response
+def update_board(board_id: int):
+    """
+    Update board by board_id
+    """
+    board = request.get_json()
+    return queries.update_board(board)
+
+
 def main():
     app.run(debug=True)
 

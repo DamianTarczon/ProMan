@@ -1,13 +1,16 @@
 export const htmlTemplates = {
     board: 1,
     column: 2,
-    card: 3
+    card: 3,
+    inputBox: 4
 }
 
 export const builderFunctions = {
     [htmlTemplates.board]: boardBuilder,
     [htmlTemplates.column]: columnBuilder,
-    [htmlTemplates.card]: cardBuilder
+    [htmlTemplates.card]: cardBuilder,
+    [htmlTemplates.inputBox]: inputBoxBuilder,
+
 };
 
 export function htmlFactory(template) {
@@ -24,8 +27,8 @@ export function htmlFactory(template) {
 
 function boardBuilder(board) {
     return `<section class="board">
-                <div class="board-header">
-                <span class="board">${board.title}</span>
+                <div class="board-header" data-board-id="${board.id}">
+                <span class="board-title" data-board-id="${board.id}">${board.title}</span>
                 <button class="rename">RENAME</button>
                 <button class="toggle-board-button" data-board-id="${board.id}">Show Cards</button>
                 <button class="board-toggle"><i class="fas fa-chevron-down">zwin</i></button>
@@ -47,4 +50,9 @@ function cardBuilder(card) {
                 <div class="card-title">${card.title}</div>
                 <div class="card-remove"><i class="fas fa-trash-alt"></i></div>
             </div>`;
+}
+
+function inputBoxBuilder(boardId, boardTitle) {
+    return `<input type="text" name="title" data-board-id="${boardId}" value="${boardTitle}">
+            <button type="Submit" data-board-id="${boardId}">Submit</button>`
 }

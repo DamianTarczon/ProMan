@@ -15,7 +15,16 @@ export let boardsManager = {
                 "click",
                 showHideButtonHandler
             );
-
+            domManager.addEventListener(
+                `.board-title[data-board-id="${board.id}"]`,
+                'click',
+                changeTitleBox
+            );
+            domManager.addEventListener(
+                `.board-header[data-board-id="${board.id}"]`,
+                'click',
+                (e) => {submitBoardTitleChange(e, board.id)}
+            )
         }
     },
 
