@@ -15,6 +15,7 @@ export let cardsManager = {
                 deleteButtonHandler
             );
             domManager.addEventListener(`.card-title[data-card-id="${card.id}"]`, 'input', changeTitle);
+            domManager.addEventListener(`.card[data-card-id="${card.id}"`,)
         }
     },
 };

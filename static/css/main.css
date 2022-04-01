@@ -128,5 +128,6 @@ section.board{
 }
 
 .card-title{
+    width: 60%;
     padding-right: 16px;
 }
