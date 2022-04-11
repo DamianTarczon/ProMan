@@ -64,3 +64,4 @@ def execute_no_return(statement, variables=None):
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
             cursor.execute(statement, variables)
 
+
