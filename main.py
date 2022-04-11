@@ -1,9 +1,12 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request
+from dotenv import load_dotenv
 from util import json_response
+import mimetypes
+import queries
 
-import queires
-
+mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
+load_dotenv()
 
 
 @app.route("/")
@@ -14,23 +17,103 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/get-boards")
+@app.route("/registration")
+def registration():
+    return render_template('registration.html')
+
+
+@app.route("/login")
+def login():
+    return render_template('login.html')
+
+
+@app.route("/api/boards", methods=['GET','POST'])
 @json_response
 def get_boards():
     """
     All the boards
     """
-    return queires.get_boards()
+    return queries.get_boards()
 
-
-@app.route("/get-cards/<int:board_id>")
+@app.route("/api/boards/post", methods= ["POST"])
 @json_response
-def get_cards_for_board(board_id: int):
+def create_new_board():
+    title = request.json
+    board_id = queries.create_new_board(title)
+    print(board_id)
+
+
+
+
+
+
+
+
+@app.route("/api/cards")
+@json_response
+def get_cards():
+    """
+    All the cards
+    """
+    return queries.get_cards()
+
+
+@app.route("/api/cards/<int:card_id>", methods=["GET", "PUT"])
+@json_response
+def get_card(card_id: int):
+    if request.method == 'GET':
+        return queries.get_card(card_id)
+    elif request.method == 'PUT':
+        card = request.json
+        title = queries.update_card_title(card['id'], card['title'])
+        print(title)
+
+
+@app.route("/api/boards/<int:column_id>/cards/")
+@json_response
+def get_cards_for_board_by_column_id(column_id: int):
     """
     All cards that belongs to a board
-    :param board_id: id of the parent board
+    :param column_id: id of the parent board
     """
-    return queires.get_cards_for_board(board_id)
+    return queries.get_cards_for_board_by_column_id(column_id)
+
+
+@app.route("/api/cards/<int:card_id>/delete", methods=['DELETE'])
+@json_response
+def delete_card(card_id: int):
+    queries.delete_card(card_id)
+
+
+@app.route("/api/board/<int:board_id>/delete", methods=['DELETE'])
+@json_response
+def delete_board(board_id: int):
+    queries.delete_board(board_id)
+
+
+@app.route("/api/column/<int:column_id>/delete", methods=['DELETE'])
+@json_response
+def delete_column(column_id: int):
+    queries.delete_column(column_id)
+
+
+@app.route("/api/<int:board_id>/columns")
+@json_response
+def get_columns(board_id: int):
+    """
+    All the boards
+    """
+    return queries.get_columns(board_id)
+
+
+@app.route("/api/<int:board_id>/put", methods=['PUT'])
+@json_response
+def update_board(board_id: int):
+    """
+    Update board by board_id
+    """
+    board = request.get_json()
+    return queries.update_board(board)
 
 
 def main():
