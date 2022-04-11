@@ -5,6 +5,36 @@ import {cardsManager} from "./cardsManager.js";
 
 export let boardsManager = {
     loadBoards: async function () {
+        let userId = await dataHandler.getUserId();
+        if (userId) {
+            let privateBoards = await dataHandler.getPrivateBoards(userId);
+            for (let privateBoard of privateBoards) {
+                let boardBuilder = htmlFactory(htmlTemplates.board);
+                let privateBoardContent = boardBuilder(privateBoard);
+                domManager.addChild('.private-board-container', privateBoardContent);
+                domManager.addEventListener(
+                `.toggle-board-button[data-board-id="${privateBoard.id}"]`,
+                "click",
+                showHideButtonHandler
+                );
+                domManager.addEventListener(
+                    `.board-title[data-board-id="${privateBoard.id}"]`,
+                    'click',
+                    changeTitleBox
+                );
+                domManager.addEventListener(
+                    `.board-header[data-board-id="${privateBoard.id}"]`,
+                    'click',
+                    (e) => {submitBoardTitleChange(e, privateBoard.id)}
+                );
+                domManager.addEventListener(
+                    `.board-delete[data-board-id="${privateBoard.id}"]`,
+                    'click',
+                    deleteBoard
+                );
+                document.querySelector(`.board-header[data-board-id="${privateBoard.id}"]`).style.background = "cornflowerblue";
+            }
+        }
         const boards = await dataHandler.getBoards();
         for (let board of boards) {
             const boardBuilder = htmlFactory(htmlTemplates.board);
@@ -32,9 +62,8 @@ export let boardsManager = {
             );
         }
     },
-
-
 };
+
 async function changeTitleBox(clickEvent) {
 
     const boardId = clickEvent.target.dataset.boardId;
@@ -43,20 +72,21 @@ async function changeTitleBox(clickEvent) {
     //  we can find better way to hide current title
     clickEvent.target.style.display='none';
 }
+
 async function submitBoardTitleChange(clickEvent, boardId) {
     if (clickEvent && clickEvent.target.dataset.boardId == boardId && clickEvent.target.tagName == 'BUTTON') {
         let input = document.querySelector(`input[data-board-id="${boardId}"]`);
         await dataHandler.updateBoard(boardId,{id:boardId, title:input.value})
         // we delete all boards, than we are loading boards again
         document.querySelector('.board-container').innerHTML='';
+        document.querySelector('.private-board-container').innerHTML='';
         await boardsManager.loadBoards()
     }
 }
+
 async function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
     let btn = document.querySelector(`.toggle-board-button[data-board-id="${boardId}"]`);
-    console.log(btn);
-    console.log(btn.innerText);
     if (btn.innerText === 'Show') {
         const columns = await dataHandler.getColumns(boardId);
         btn.innerText = 'Hide';
@@ -108,5 +138,6 @@ button.onclick = async function (){
     await dataHandler.createNewBoard(boardTitle);
     // we delete all boards, than we are loading boards again // what is the better option to refresh the page??
     document.querySelector('.board-container').innerHTML='';
+    document.querySelector('.private-board-container').innerHTML='';
     await boardsManager.loadBoards()
 }

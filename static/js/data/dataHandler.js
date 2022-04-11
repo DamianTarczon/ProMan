@@ -45,6 +45,9 @@ export let dataHandler = {
         return await apiPost(`/api/boards/post`, boardTitle);
         // creates new board, saves it and calls the callback function with its data
     },
+    createNewPrivateBoard: async function (privateBoardTitle) {
+        return await apiPost(`/api/new_private_board`, privateBoardTitle);
+    },
     createNewCard: async function (cardTitle, boardId, statusId) {
         // creates new card, saves it and calls the callback function with its data
         const data = {
@@ -72,6 +75,12 @@ export let dataHandler = {
             card_order: data.card_order,
         };
         return await apiPost(`/api/cards/${data.id}`, DB);
+    },
+    getUserId: async function () {
+        return await apiGet("/api/user_id");
+    },
+    getPrivateBoards: async function (userId) {
+        return await apiGet(`/api/private_boards/${userId}`)
     }
 };
 

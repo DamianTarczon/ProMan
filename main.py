@@ -1,19 +1,16 @@
 from flask import Flask, render_template, url_for, request, session, redirect
 from dotenv import load_dotenv
-from util import json_response
 import mimetypes
 import queries
 import time
 import bcrypt
+from util import json_response
 
 mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
 app.secret_key = "b/\n\xefp\xc6z\xaaj\xbd\x1fR=\x17.f%\xbf\xe7I\xd3"
 # app.permanent_session_lifetime = timedelta(minutes=5)
 load_dotenv()
-
-
-
 
 
 @app.route("/")
@@ -81,7 +78,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route("/api/boards", methods=['GET','POST'])
+@app.route("/api/boards", methods=['GET', 'POST'])
 @json_response
 def get_boards():
     """
@@ -90,12 +87,21 @@ def get_boards():
     return queries.get_boards()
 
 
-@app.route("/api/boards/post", methods= ["POST"])
+@app.route("/api/boards/post", methods=["POST"])
 @json_response
 def create_new_board():
     title = request.json
-    board_id = queries.create_new_board(title)
-    print(board_id)
+    queries.create_new_board(title)
+
+
+@app.route('/api/new_private_board', methods=['POST'])
+@json_response
+def create_new_private_board():
+    if len(session) == 0:
+        return redirect(url_for('index'))
+    else:
+        title = request.json
+        queries.create_new_private_board(title, session['user'])
 
 
 @app.route("/api/cards")
@@ -165,8 +171,23 @@ def update_board(board_id: int):
     return queries.update_board(board)
 
 
-def main():
+@app.route("/api/user_id")
+@json_response
+def get_user_id_from_session():
+    if len(session) == 0:
+        return None
+    else:
+        user_name = session['user']
+    return queries.get_user_id_from_session(user_name)
 
+
+@app.route('/api/private_boards/<user_id>')
+@json_response
+def get_private_boards(user_id):
+    return queries.get_private_boards(user_id)
+
+
+def main():
     app.run(debug=True)
 
     # Serving the favicon

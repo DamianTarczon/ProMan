@@ -9,8 +9,7 @@ export const builderFunctions = {
     [htmlTemplates.board]: boardBuilder,
     [htmlTemplates.column]: columnBuilder,
     [htmlTemplates.card]: cardBuilder,
-    [htmlTemplates.inputBox]: inputBoxBuilder,
-
+    [htmlTemplates.inputBox]: inputBoxBuilder
 };
 
 export function htmlFactory(template) {
@@ -30,7 +29,6 @@ function boardBuilder(board) {
                 <div class="board-header" data-board-id="${board.id}">
                 <span class="board-title" data-board-id="${board.id}" contenteditable="true">${board.title}</span>
                 <button class="toggle-board-button" data-board-id="${board.id}">Show</button>
-                <button class="board-toggle"><i class="fas fa-chevron-down">zwin</i></button>
                 <button class="board-delete" data-board-id="${board.id}">Delete</button>
                 </div>
                 <div class="board-columns" data-board-id=${board.id}>
@@ -56,3 +54,4 @@ function inputBoxBuilder(boardId, boardTitle) {
     return `<input type="text" name="title" data-board-id="${boardId}" value="${boardTitle}">
             <button type="Submit" data-board-id="${boardId}">Submit</button>`
 }
+

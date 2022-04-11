@@ -29,7 +29,7 @@ def get_boards():
     return data_manager.execute_select(
         """
         SELECT * FROM boards
-        ;
+        WHERE user_id IS NULL;
         """
     )
 
@@ -157,6 +157,7 @@ def create_new_board(title):
         RETURNING id
         """, (title,)
     )[0]['id']
+
     column_titles = data_manager.execute_select(
         """
         SELECT title
@@ -174,6 +175,26 @@ def insert_column_into_new_board(board_id, status_id, title):
             VALUES ((%s), (%s), (%s))
             """, (board_id, status_id, title)
     )
+
+
+def create_new_private_board(title, user_name):
+    user_id = get_user_id_from_session(user_name)
+    board_id = data_manager.execute_select(
+        """
+            INSERT INTO boards (title, user_id)
+            VALUES ((%s), (%s))
+            RETURNING id
+        """, (title, user_id)
+    )[0]['id']
+
+    column_titles = data_manager.execute_select(
+        """
+            SELECT title
+            FROM statuses
+        """
+    )
+    for i in range(4):
+        insert_column_into_new_board(board_id, i+1, column_titles[i]['title'])
 
 
 def db_name_check():
@@ -203,3 +224,22 @@ def db_registration(name, password):
     """
                                    , {"name": name, "password": password})
 
+
+def get_user_id_from_session(user_name):
+    return data_manager.execute_select(
+        """
+            SELECT id
+            FROM users
+            WHERE name = (%s)
+        """, (user_name, )
+    )[0]['id']
+
+
+def get_private_boards(user_id):
+    return data_manager.execute_select(
+        """
+            SELECT * 
+            FROM boards
+            WHERE user_id = (%s)
+        """, (user_id,)
+    )
