@@ -1,30 +1,84 @@
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, url_for, request, session, redirect
 from dotenv import load_dotenv
 from util import json_response
 import mimetypes
 import queries
+import time
+import bcrypt
 
 mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
+app.secret_key = "b/\n\xefp\xc6z\xaaj\xbd\x1fR=\x17.f%\xbf\xe7I\xd3"
+# app.permanent_session_lifetime = timedelta(minutes=5)
 load_dotenv()
+
+
+
 
 
 @app.route("/")
 def index():
-    """
-    This is a one-pager which shows all the boards and cards
-    """
-    return render_template('index.html')
+    if len(session) == 0:
+        user = "guest"
+    else:
+        user = session['user']
+    return render_template('index.html', user=user)
 
 
-@app.route("/registration")
+@app.route("/registration", methods=['GET', 'POST'])
 def registration():
-    return render_template('registration.html')
+    if request.method == 'GET':
+        return render_template('registration.html')
+    if request.method == 'POST':
+        name = request.form['name']
+        password = request.form['password']
+        if not is_name_in_db(name):
+            queries.db_registration(name, password)
+        else:
+            error = "User name already taken. Try again!"
+            return render_template('registration.html', error=error)
+        return redirect(url_for('index'))
 
 
-@app.route("/login")
+def is_name_in_db(name):
+    print(name)
+    list_names_list = queries.db_name_check()
+    print(list_names_list)
+
+    if name in list_names_list:
+        return True
+    else:
+        return False
+
+
+def is_password_in_db(password):
+    list_passwords_list = queries.db_password_check()
+    if password in list_passwords_list:
+        return True
+    else:
+        return False
+
+
+@app.route("/login", methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if request.method == "GET":
+        return render_template('login.html')
+    else:
+        name = request.form['name']
+        password = request.form['password']
+        if is_name_in_db(name) and is_password_in_db(password):
+            session['user'] = name
+            ok = f"Hi {name} You are now logged in!"
+            return render_template("index.html", ok=ok)
+        else:
+            error = "Incorrect name or password. Try again!"
+            return render_template('login.html', error=error)
+
+
+@app.route("/logout")
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('index'))
 
 
 @app.route("/api/boards", methods=['GET','POST'])
@@ -35,18 +89,13 @@ def get_boards():
     """
     return queries.get_boards()
 
+
 @app.route("/api/boards/post", methods= ["POST"])
 @json_response
 def create_new_board():
     title = request.json
     board_id = queries.create_new_board(title)
     print(board_id)
-
-
-
-
-
-
 
 
 @app.route("/api/cards")
@@ -117,6 +166,7 @@ def update_board(board_id: int):
 
 
 def main():
+
     app.run(debug=True)
 
     # Serving the favicon
