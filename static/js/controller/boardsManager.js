@@ -54,18 +54,28 @@ async function submitBoardTitleChange(clickEvent, boardId) {
 }
 async function showHideButtonHandler(clickEvent) {
     const boardId = clickEvent.target.dataset.boardId;
-    const columns = await dataHandler.getColumns(boardId);
-    for (let i=0; i<columns.length;i++) {
-        const column = columns[i]
-        const columnBuilder = htmlFactory(htmlTemplates.column);
-        const columnContent = columnBuilder(column);
-        domManager.addChild(`.board-columns[data-board-id="${boardId}"]`, columnContent);
-        domManager.addEventListener(
-            `.column-delete[data-column-id="${column.id}"]`,
-            'click',
-            deleteColumn
-        );
-        await cardsManager.loadCards(column.id);
+    let btn = document.querySelector(`.toggle-board-button[data-board-id="${boardId}"]`);
+    console.log(btn);
+    console.log(btn.innerText);
+    if (btn.innerText === 'Show') {
+        const columns = await dataHandler.getColumns(boardId);
+        btn.innerText = 'Hide';
+        for (let i = 0; i < columns.length; i++) {
+            const column = columns[i]
+            const columnBuilder = htmlFactory(htmlTemplates.column);
+            const columnContent = columnBuilder(column);
+            domManager.addChild(`.board-columns[data-board-id="${boardId}"]`, columnContent);
+            domManager.addEventListener(
+                `.column-delete[data-column-id="${column.id}"]`,
+                'click',
+                deleteColumn
+            );
+            await cardsManager.loadCards(column.id);
+        }
+    } else {
+        btn.innerText='Show';
+        let columns=document.querySelector(`.board-columns[data-board-id="${boardId}"]`);
+        columns.innerHTML='';
     }
 }
 
