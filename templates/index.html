@@ -29,9 +29,12 @@
             <button type="button" id='666'>NEW BOARD</button>
 
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ url_for('registration') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
-                </li>
-                <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            {% if user == "guest" %}
+				<li><a href="{{ url_for('registration') }}" ><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+				<li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            {% else %}
+                <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -39,5 +42,8 @@
 <div id="root">
     <div class="board-container"></div>
 </div>
+{% if ok %}
+<h1>{{ ok }}</h1>
+{% endif %}
 </body>
 </html>

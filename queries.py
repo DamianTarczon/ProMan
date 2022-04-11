@@ -1,4 +1,6 @@
 import data_manager
+import psycopg2.extras
+import psycopg2
 
 
 def get_card_status(status_id):
@@ -172,3 +174,32 @@ def insert_column_into_new_board(board_id, status_id, title):
             VALUES ((%s), (%s), (%s))
             """, (board_id, status_id, title)
     )
+
+
+def db_name_check():
+    db_names_list = data_manager.execute_select("""
+    SELECT name
+    FROM users
+    ;
+    """)
+    list_names_list = [users['name'] for users in db_names_list]
+    return list_names_list
+
+
+def db_password_check():
+    db_passwords_list = data_manager.execute_select("""
+    SELECT password
+    FROM users;
+    """)
+    list_passwords_list = [users['password'] for users in db_passwords_list]
+    return list_passwords_list
+
+
+def db_registration(name, password):
+    data_manager.execute_no_return("""
+    INSERT INTO users(name, password)
+    VALUES (%(name)s, %(password)s);
+
+    """
+                                   , {"name": name, "password": password})
+

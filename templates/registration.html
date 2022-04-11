@@ -8,7 +8,7 @@
     <title>Registration</title>
 </head>
 <body>
-<form class="form-horizontal">
+<form class="form-horizontal" action="{{ url_for('registration') }}" method="POST">
     <fieldset>
         <legend>Register</legend>
             <label class="col-md4 control-label" for="name">Name</label>
@@ -32,6 +32,9 @@
         </div>
     </fieldset>
 </form>
+{% if error %}
+<h1>{{ error }}</h1>
+{% endif %}
 
 </body>
 </html>

@@ -102,6 +102,12 @@ ALTER TABLE ONLY cards
 ALTER TABLE ONLY cards
     ADD CONSTRAINT fk_cards_status_id FOREIGN KEY (status_id) REFERENCES statuses(id);
 
+CREATE TABLE users (
+	user_id serial PRIMARY KEY,
+	name VARCHAR ( 50 ) UNIQUE NOT NULL,
+	password VARCHAR ( 50 ) NOT NULL
+);
+
 ALTER TABLE ONLY columns
     ADD CONSTRAINT fk_columns_status_id FOREIGN KEY (status_id) REFERENCES statuses(id);
 
