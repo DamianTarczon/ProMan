@@ -44,7 +44,7 @@ async function changeTitleBox(clickEvent) {
     clickEvent.target.style.display='none';
 }
 async function submitBoardTitleChange(clickEvent, boardId) {
-    if (clickEvent && clickEvent.target.dataset.boardId == boardId && clickEvent.target.tagName == 'BUTTON') {
+    if (clickEvent && clickEvent.target.dataset.boardId === boardId && clickEvent.target.tagName === 'BUTTON') {
         let input = document.querySelector(`input[data-board-id="${boardId}"]`);
         await dataHandler.updateBoard(boardId,{id:boardId, title:input.value})
         // we delete all boards, than we are loading boards again
