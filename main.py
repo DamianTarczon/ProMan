@@ -1,31 +1,81 @@
-import mimetypes
+from flask import Flask, render_template, url_for, request, session, redirect
 from dotenv import load_dotenv
-from flask import Flask, render_template, url_for, request
-
+import mimetypes
 import queries
+import time
+import bcrypt
 from util import json_response
 
 mimetypes.add_type('application/javascript', '.js')
 app = Flask(__name__)
+app.secret_key = "b/\n\xefp\xc6z\xaaj\xbd\x1fR=\x17.f%\xbf\xe7I\xd3"
+# app.permanent_session_lifetime = timedelta(minutes=5)
 load_dotenv()
 
 
 @app.route("/")
 def index():
-    """
-    This is a one-pager which shows all the boards and cards
-    """
-    return render_template('index.html')
+    if len(session) == 0:
+        user = "guest"
+    else:
+        user = session['user']
+    return render_template('index.html', user=user)
 
 
-@app.route("/registration")
+@app.route("/registration", methods=['GET', 'POST'])
 def registration():
-    return render_template('registration.html')
+    if request.method == 'GET':
+        return render_template('registration.html')
+    if request.method == 'POST':
+        name = request.form['name']
+        password = request.form['password']
+        if not is_name_in_db(name):
+            queries.db_registration(name, password)
+        else:
+            error = "User name already taken. Try again!"
+            return render_template('registration.html', error=error)
+        return redirect(url_for('index'))
 
 
-@app.route("/login")
+def is_name_in_db(name):
+    print(name)
+    list_names_list = queries.db_name_check()
+    print(list_names_list)
+
+    if name in list_names_list:
+        return True
+    else:
+        return False
+
+
+def is_password_in_db(password):
+    list_passwords_list = queries.db_password_check()
+    if password in list_passwords_list:
+        return True
+    else:
+        return False
+
+
+@app.route("/login", methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if request.method == "GET":
+        return render_template('login.html')
+    else:
+        name = request.form['name']
+        password = request.form['password']
+        if is_name_in_db(name) and is_password_in_db(password):
+            session['user'] = name
+            ok = f"Hi {name} You are now logged in!"
+            return render_template("index.html", ok=ok)
+        else:
+            error = "Incorrect name or password. Try again!"
+            return render_template('login.html', error=error)
+
+
+@app.route("/logout")
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('index'))
 
 
 @app.route("/api/boards", methods=['GET', 'POST'])
@@ -36,12 +86,21 @@ def get_boards():
     """
     return queries.get_boards()
 
-
 @app.route("/api/boards/post", methods= ["POST"])
 @json_response
 def create_new_board():
     title = request.json
-    board_id = queries.create_new_board(title)
+    queries.create_new_board(title)
+
+
+@app.route('/api/new_private_board', methods=['POST'])
+@json_response
+def create_new_private_board():
+    if len(session) == 0:
+        return redirect(url_for('index'))
+    else:
+        title = request.json
+        queries.create_new_private_board(title, session['user'])
 
 
 @app.route("/api/cards")
@@ -61,6 +120,7 @@ def get_card(card_id: int):
     elif request.method == 'PUT':
         card = request.json
         title = queries.update_card_title(card['id'], card['title'])
+        print(title)
 
 
 @app.route("/api/boards/<int:column_id>/cards/")
@@ -108,6 +168,22 @@ def update_board(board_id: int):
     """
     board = request.get_json()
     return queries.update_board(board)
+
+
+@app.route("/api/user_id")
+@json_response
+def get_user_id_from_session():
+    if len(session) == 0:
+        return None
+    else:
+        user_name = session['user']
+    return queries.get_user_id_from_session(user_name)
+
+
+@app.route('/api/private_boards/<user_id>')
+@json_response
+def get_private_boards(user_id):
+    return queries.get_private_boards(user_id)
 
 
 def main():

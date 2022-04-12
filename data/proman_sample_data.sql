@@ -21,6 +21,7 @@ DROP TABLE IF EXISTS statuses CASCADE;
 DROP TABLE IF EXISTS boards CASCADE;
 DROP TABLE IF EXISTS cards;
 DROP TABLE IF EXISTS columns;
+DROP TABLE IF EXISTS users;
 
 ---
 --- create tables
@@ -33,7 +34,8 @@ CREATE TABLE statuses (
 
 CREATE TABLE boards (
     id          SERIAL PRIMARY KEY  NOT NULL,
-    title       VARCHAR(200)        NOT NULL
+    title       VARCHAR(200)        NOT NULL,
+    user_id     INTEGER
 );
 
 CREATE TABLE cards (
@@ -50,8 +52,12 @@ CREATE TABLE columns (
     board_id    INTEGER             NOT NULL,
     status_id   INTEGER             NOT NULL,
     title       VARCHAR (200)       NOT NULL
+);
 
-
+CREATE TABLE users (
+	id serial PRIMARY KEY,
+	name VARCHAR ( 50 ) UNIQUE NOT NULL,
+	password VARCHAR ( 50 ) NOT NULL
 );
 
 ---
@@ -83,14 +89,14 @@ INSERT INTO cards VALUES (nextval('cards_id_seq'), 2, 4, 'done card 1', 2, 8);
 --- add columns
 ---
 
-INSERT INTO columns VALUES (1,1,1,'new');
-INSERT INTO columns VALUES (2,1,2,'in progress');
-INSERT INTO columns VALUES (3,1,3,'testing');
-INSERT INTO columns VALUES (4,1,4,'done');
-INSERT INTO columns VALUES (5,2,1,'new');
-INSERT INTO columns VALUES (6,2,2,'in progress');
-INSERT INTO columns VALUES (7,2,3,'testing');
-INSERT INTO columns VALUES (8,2,4,'done');
+INSERT INTO columns(board_id, status_id, title) VALUES (1,1,'new');
+INSERT INTO columns(board_id, status_id, title) VALUES (1,2,'in progress');
+INSERT INTO columns(board_id, status_id, title) VALUES (1,3,'testing');
+INSERT INTO columns(board_id, status_id, title) VALUES (1,4,'done');
+INSERT INTO columns(board_id, status_id, title) VALUES (2,1,'new');
+INSERT INTO columns(board_id, status_id, title) VALUES (2,2,'in progress');
+INSERT INTO columns(board_id, status_id, title) VALUES (2,3,'testing');
+INSERT INTO columns(board_id, status_id, title) VALUES (2,4,'done');
 
 ---
 --- add constraints
@@ -113,3 +119,6 @@ ALTER TABLE ONLY columns
 --
 ALTER TABLE ONLY cards
     ADD CONSTRAINT fk_cards_column_id FOREIGN KEY (column_id) REFERENCES columns(id);
+
+ALTER TABLE ONLY boards
+    ADD CONSTRAINT fk_boards_user_id FOREIGN KEY (user_id) REFERENCES users(id);

@@ -65,3 +65,9 @@ def execute_no_return(statement, variables=None):
             cursor.execute(statement, variables)
 
 
+def execute_no_return(statement, variables=None):
+    with establish_connection() as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+            cursor.execute(statement, variables)
+
+

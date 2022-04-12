@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<link href="//maxcdn.bootstrap.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrap.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ProMan</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
     <link rel="icon" type="image/png" sizes="32x32"
@@ -19,6 +19,10 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
     <script type="module" src="{{ url_for('static', filename='js/main.js') }}" defer></script>
     <script type="module" src="{{ url_for('static', filename='js/controller/cardsManager.js') }}" defer></script>
+    <script type="module" defer>
+        import {createPrivateBoard} from "../static/js/main.js";
+        {#tworzy globalną zmienną i przypisuje funkcje#}
+        window.createPrivateBoard = createPrivateBoard </script>
 </head>
 <body>
 <div class="menu">
@@ -27,18 +31,27 @@
             <a href="#"></a>
         </div>
         <div>
-            <button type="button" id='666'>NEW BOARD</button>
-
+            <button type="button" id='666'>New Public Board</button>
+            {% if user != 'guest' %}
+                <button type="button" id="private-board" onclick="createPrivateBoard()">New Private Board</button>
+            {% endif %}
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="{{ url_for('registration') }}"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
-                </li>
-                <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            {% if user == "guest" %}
+				<li><a href="{{ url_for('registration') }}" ><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+				<li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            {% else %}
+                <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
 </div>
 <div id="root">
+    <div class="private-board-container"></div>
     <div class="board-container"></div>
 </div>
+{% if ok %}
+<h1>{{ ok }}</h1>
+{% endif %}
 </body>
 </html>
