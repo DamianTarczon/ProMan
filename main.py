@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 import mimetypes
 import queries
 import time
-import bcrypt
 from util import json_response
 
 mimetypes.add_type('application/javascript', '.js')
@@ -29,31 +28,12 @@ def registration():
     if request.method == 'POST':
         name = request.form['name']
         password = request.form['password']
-        if not is_name_in_db(name):
+        if not queries.db_name_check(name):
             queries.db_registration(name, password)
         else:
             error = "User name already taken. Try again!"
             return render_template('registration.html', error=error)
         return redirect(url_for('index'))
-
-
-def is_name_in_db(name):
-    print(name)
-    list_names_list = queries.db_name_check()
-    print(list_names_list)
-
-    if name in list_names_list:
-        return True
-    else:
-        return False
-
-
-def is_password_in_db(password):
-    list_passwords_list = queries.db_password_check()
-    if password in list_passwords_list:
-        return True
-    else:
-        return False
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -63,10 +43,14 @@ def login():
     else:
         name = request.form['name']
         password = request.form['password']
-        if is_name_in_db(name) and is_password_in_db(password):
-            session['user'] = name
-            ok = f"Hi {name} You are now logged in!"
-            return render_template("index.html", ok=ok)
+        if queries.db_name_check(name):
+            hashed_password = queries.get_hashed_password(name)
+            if queries.verify_password(password, hashed_password):
+                session['user'] = name
+                return redirect(url_for('index'))
+            else:
+                error = "Incorrect name or password. Try again!"
+                return render_template('login.html', error=error)
         else:
             error = "Incorrect name or password. Try again!"
             return render_template('login.html', error=error)
