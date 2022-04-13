@@ -60,6 +60,9 @@ export let boardsManager = {
                 'click',
                 deleteBoard
             );
+            domManager.addEventListener(`#Refresh`,'click',
+                refreshSite
+            );
         }
     },
 };
@@ -74,7 +77,7 @@ async function changeTitleBox(clickEvent) {
 }
 
 async function submitBoardTitleChange(clickEvent, boardId) {
-    if (clickEvent && clickEvent.target.dataset.boardId == boardId && clickEvent.target.tagName == 'BUTTON') {
+    if (clickEvent && clickEvent.target.dataset.boardId === boardId && clickEvent.target.tagName === 'BUTTON') {
         let input = document.querySelector(`input[data-board-id="${boardId}"]`);
         await dataHandler.updateBoard(boardId,{id:boardId, title:input.value})
         // we delete all boards, than we are loading boards again
@@ -132,12 +135,18 @@ async function deleteColumn(clickEvent) {
     }
 }
 
-let button = document.getElementById('666')
+let button = document.getElementById('board-creator')
 button.onclick = async function (){
     let boardTitle = prompt("Please enter the name of a new board", '');
     await dataHandler.createNewBoard(boardTitle);
     // we delete all boards, than we are loading boards again // what is the better option to refresh the page??
     document.querySelector('.board-container').innerHTML='';
     document.querySelector('.private-board-container').innerHTML='';
+    await boardsManager.loadBoards()
+}
+
+
+async function refreshSite(clickEvent) {
+    document.querySelector('.board-container').innerHTML='';
     await boardsManager.loadBoards()
 }

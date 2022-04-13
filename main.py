@@ -70,8 +70,7 @@ def get_boards():
     """
     return queries.get_boards()
 
-
-@app.route("/api/boards/post", methods=["POST"])
+@app.route("/api/boards/post", methods= ["POST"])
 @json_response
 def create_new_board():
     title = request.json

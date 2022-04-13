@@ -15,10 +15,64 @@ export let cardsManager = {
                 deleteButtonHandler
             );
             domManager.addEventListener(`.card-title[data-card-id="${card.id}"]`, 'input', changeTitle);
-            domManager.addEventListener(`.card[data-card-id="${card.id}"`,)
+            // domManager.addEventListener(`.board[data-board-id="${card.board_id}"]`, 'drag', changeColumn);
         }
     },
+
+    onDragStart: function (event){
+        event.dataTransfer.setData('text/plain', event.target.id);
+    },
+
+    onDrop: function (event){
+
+    },
+
+    onDragOver: function (event){
+
+    }
+
 };
+
+
+function changeColumn() {
+    const cards = document.querySelectorAll('.card');
+    const columns = document.querySelectorAll('.board-column');
+    cards.forEach(card => {
+        card.addEventListener('dragstart', () => {
+            card.classList.add('dragging');
+        });
+        card.addEventListener('dragend', () => {
+            card.classList.remove('dragging');
+        });
+    });
+
+    columns.forEach(column => {
+        column.addEventListener('dragover', event => {
+            event.preventDefault();
+            const afterElement = getDragAfterElement(column, event.clientY);
+            const card = document.querySelector('.card');
+            let newCard = document.createElement(`${card}`);
+            if (afterElement == null) {
+                column.appendChild(newCard);
+            } else {
+                column.insertBefore(newCard, afterElement);
+            }
+        });
+
+        function getDragAfterElement(column, y) {
+            const draggableElements = [...column.querySelectorAll('.card:not(.dragging)')]
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return {offset: offset, element: child}
+                } else {
+                    return closest
+                }
+            }, {offset: Number.NEGATIVE_INFINITY});
+        }
+    });
+}
 
 async function deleteButtonHandler(clickEvent) {
     let cardId = clickEvent.target.getAttribute('data-card-id');

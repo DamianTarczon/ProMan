@@ -38,14 +38,14 @@ function boardBuilder(board) {
 }
 
 function columnBuilder(column) {
-    return `<div class="board-column" data-column-id="${column.id}">
+    return `<div class="board-column" ondragover="onDragOver();" ondrop="onDrop();" data-column-id="${column.id}">
                 <div class="board-column-title"  contenteditable="true">${column.title}<a class="column-delete" data-column-id="${column.id}" >🗑</a></div>               
                 <div class="board-column-content" data-column-id="${column.id}"></div>
             </div>`;
 }
 
 function cardBuilder(card) {
-    return `<div class="card" data-card-id="${card.id}">
+    return `<div class="card" draggable="true" ondragstart="onDragStart();" data-card-id="${card.id}">
                 <div class="card-title" contenteditable="true" data-card-id="${card.id}">${card.title}</div>
                 <div class="card-remove"><a class="bin" data-card-id="${card.id}" >🗑</a></div>
             </div>`;
