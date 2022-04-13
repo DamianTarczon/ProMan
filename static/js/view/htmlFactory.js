@@ -30,6 +30,7 @@ function boardBuilder(board) {
                 <span class="board-title" data-board-id="${board.id}" contenteditable="true">${board.title}</span>
                 <button class="toggle-board-button" data-board-id="${board.id}">Show</button>
                 <button class="board-delete" data-board-id="${board.id}">Delete</button>
+                <button class="add-column" data-board-id="${board.id}">Add new column</button>
                 </div>
                 <div class="board-columns" data-board-id=${board.id}>
                 </div>

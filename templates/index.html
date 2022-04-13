@@ -35,10 +35,10 @@
             {% endif %}
             <ul class="nav navbar-nav navbar-right">
             {% if user == "guest" %}
-				<li><a href="{{ url_for('registration') }}" ><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-				<li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+				<li><a class="btn" href="{{ url_for('registration') }}" ><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+				<li><a class="btn" href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
             {% else %}
-                <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+                <li><a class="btn" href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
                 {% endif %}
             </ul>
         </div>

@@ -30,7 +30,7 @@ button{
     background: #222;
     color: #fff;
     border: none;
-    font-size: 14px;
+    font-size: 15px;
     font-family: sans-serif;
     padding: 4px 10px;
 }
@@ -135,4 +135,9 @@ section.board{
 .card-title{
     width: 60%;
     padding-right: 16px;
+}
+
+.btn{
+    color: white;
+    background-color: black;
 }
