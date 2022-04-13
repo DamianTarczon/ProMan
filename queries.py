@@ -259,3 +259,12 @@ def get_hashed_password(name):
             WHERE name = (%s)
         """, (name,)
     )[0]['password']
+
+
+def add_new_column(board_id, title):
+    return data_manager.execute_no_return(
+        """
+            INSERT INTO columns(board_id, title)
+            VALUES ((%s), (%s))
+        """, (board_id, title)
+    )

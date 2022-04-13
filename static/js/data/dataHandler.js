@@ -81,6 +81,9 @@ export let dataHandler = {
     },
     getPrivateBoards: async function (userId) {
         return await apiGet(`/api/private_boards/${userId}`)
+    },
+    addNewColumn: async function (boardId, columnTitle) {
+        return await apiPost(`/api/new_column/${boardId}/${columnTitle}`);
     }
 };
 

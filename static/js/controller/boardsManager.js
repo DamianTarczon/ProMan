@@ -32,6 +32,10 @@ export let boardsManager = {
                     'click',
                     deleteBoard
                 );
+                domManager.addEventListener(`.add-column[data-board-id="${privateBoard.id}"`,
+                'click',
+                addNewColumn
+                );
                 document.querySelector(`.board-header[data-board-id="${privateBoard.id}"]`).style.background = "cornflowerblue";
             }
         }
@@ -60,12 +64,25 @@ export let boardsManager = {
                 'click',
                 deleteBoard
             );
+            domManager.addEventListener(`.add-column[data-board-id="${board.id}"`,
+                'click',
+                addNewColumn
+            );
             domManager.addEventListener(`#Refresh`,'click',
                 refreshSite
             );
         }
     },
 };
+
+async function addNewColumn(clickEvent) {
+    let boardId = clickEvent.target.dataset.boardId;
+    let columnTitle = prompt("Please enter the name of a new column", '');
+    await dataHandler.addNewColumn(boardId, columnTitle);
+    document.querySelector('.board-container').innerHTML='';
+    document.querySelector('.private-board-container').innerHTML='';
+    await boardsManager.loadBoards();
+}
 
 async function changeTitleBox(clickEvent) {
 

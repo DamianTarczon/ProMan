@@ -170,6 +170,12 @@ def get_private_boards(user_id):
     return queries.get_private_boards(user_id)
 
 
+@app.route('/api/new_column/<board_id>/<column_title>', methods=['POST'])
+@json_response
+def add_new_column(board_id, column_title):
+    queries.add_new_column(board_id, column_title)
+
+
 def main():
     app.run(debug=True)
 
