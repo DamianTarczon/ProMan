@@ -1,6 +1,7 @@
 import data_manager
 import psycopg2.extras
 import psycopg2
+import bcrypt
 
 
 def get_card_status(status_id):
@@ -29,7 +30,7 @@ def get_boards():
     return data_manager.execute_select(
         """
         SELECT * FROM boards
-        ;
+        WHERE user_id IS NULL;
         """
     )
 
@@ -157,6 +158,7 @@ def create_new_board(title):
         RETURNING id
         """, (title,)
     )[0]['id']
+
     column_titles = data_manager.execute_select(
         """
         SELECT title
@@ -176,30 +178,84 @@ def insert_column_into_new_board(board_id, status_id, title):
     )
 
 
-def db_name_check():
+def create_new_private_board(title, user_name):
+    user_id = get_user_id_from_session(user_name)
+    board_id = data_manager.execute_select(
+        """
+            INSERT INTO boards (title, user_id)
+            VALUES ((%s), (%s))
+            RETURNING id
+        """, (title, user_id)
+    )[0]['id']
+
+    column_titles = data_manager.execute_select(
+        """
+            SELECT title
+            FROM statuses
+        """
+    )
+    for i in range(4):
+        insert_column_into_new_board(board_id, i+1, column_titles[i]['title'])
+
+
+def db_name_check(name):
     db_names_list = data_manager.execute_select("""
     SELECT name
     FROM users
     ;
     """)
     list_names_list = [users['name'] for users in db_names_list]
-    return list_names_list
-
-
-def db_password_check():
-    db_passwords_list = data_manager.execute_select("""
-    SELECT password
-    FROM users;
-    """)
-    list_passwords_list = [users['password'] for users in db_passwords_list]
-    return list_passwords_list
+    if name in list_names_list:
+        return True
+    else:
+        return False
 
 
 def db_registration(name, password):
+    hashed_password = hash_password(password)
     data_manager.execute_no_return("""
     INSERT INTO users(name, password)
     VALUES (%(name)s, %(password)s);
 
-    """
-                                   , {"name": name, "password": password})
+    """, {"name": name, "password": hashed_password})
 
+
+def get_user_id_from_session(user_name):
+    return data_manager.execute_select(
+        """
+            SELECT id
+            FROM users
+            WHERE name = (%s)
+        """, (user_name, )
+    )[0]['id']
+
+
+def get_private_boards(user_id):
+    return data_manager.execute_select(
+        """
+            SELECT * 
+            FROM boards
+            WHERE user_id = (%s)
+        """, (user_id,)
+    )
+
+
+def hash_password(plain_text_password):
+    # By using bcrypt, the salt is saved into the hash itself
+    hashed_bytes = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_bytes.decode('utf-8')
+
+
+def verify_password(plain_text_password, hashed_password):
+    hashed_bytes_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_bytes_password)
+
+
+def get_hashed_password(name):
+    return data_manager.execute_select(
+        """
+            SELECT password
+            FROM users
+            WHERE name = (%s)
+        """, (name,)
+    )[0]['password']
