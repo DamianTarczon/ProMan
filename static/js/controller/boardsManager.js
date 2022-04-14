@@ -5,7 +5,9 @@ import {cardsManager} from "./cardsManager.js";
 
 export let boardsManager = {
     loadBoards: async function () {
+        //wez id uzytkownika ktory jest w sesji
         let userId = await dataHandler.getUserId();
+        //jesli jest jakies id to najpierw wyswietl jego prywatne boardy i dodaj eventlistenery
         if (userId) {
             let privateBoards = await dataHandler.getPrivateBoards(userId);
             for (let privateBoard of privateBoards) {
@@ -39,6 +41,7 @@ export let boardsManager = {
                 document.querySelector(`.board-header[data-board-id="${privateBoard.id}"]`).style.background = "cornflowerblue";
             }
         }
+        //wez reszte publicznych boardow i je wyswietl
         const boards = await dataHandler.getBoards();
         for (let board of boards) {
             const boardBuilder = htmlFactory(htmlTemplates.board);
@@ -85,7 +88,6 @@ async function addNewColumn(clickEvent) {
 }
 
 async function changeTitleBox(clickEvent) {
-
     const boardId = clickEvent.target.dataset.boardId;
     let inputBox = htmlFactory(htmlTemplates.inputBox)(boardId, clickEvent.target.innerHTML);
     domManager.addChild(`.board-title[data-board-id="${boardId}"]`,inputBox, "afterend")
@@ -94,7 +96,7 @@ async function changeTitleBox(clickEvent) {
 }
 
 async function submitBoardTitleChange(clickEvent, boardId) {
-    if (clickEvent && clickEvent.target.dataset.boardId === boardId && clickEvent.target.tagName === 'BUTTON') {
+    if (clickEvent.target.dataset.boardId == boardId && clickEvent.target.tagName == 'BUTTON') {
         let input = document.querySelector(`input[data-board-id="${boardId}"]`);
         await dataHandler.updateBoard(boardId,{id:boardId, title:input.value})
         // we delete all boards, than we are loading boards again
